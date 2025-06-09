@@ -1589,6 +1589,13 @@ def record_compilation_metrics(
         "python_version": sys.version,
     }
 
+    restart_reasons = metrics.get("restart_reasons")
+
+    for _compile_metric in get_compilation_metrics():
+        if _compile_metric.restart_reasons == restart_reasons:
+            log.debug("Skipping duplicate compilation_metrics with restart reasons: %s", restart_reasons)
+            return
+
     compilation_metrics = CompilationMetrics.create({**common_metrics, **metrics})
     _compilation_metrics.append(compilation_metrics)
 
